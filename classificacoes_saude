@@ -1,0 +1,61 @@
+/*capitulos da cid-10:	 
+	001  I.   Algumas doenças infecciosas e parasitárias    A00-B99
+    002  II.  Neoplasias (tumores)                          C00-D48
+    003  III. Doenças sangue órgãos hemat e transt imunitár D50-D89
+    004  IV.  Doenças endócrinas nutricionais e metabólicas E00-E90
+    005  V.   Transtornos mentais e comportamentais         F00-F99
+    006  VI.  Doenças do sistema nervoso                    G00-G99
+    007  VII. Doenças do olho e anexos                      H00-H59
+    008  VIII.Doenças do ouvido e da apófise mastóide       H60-H95
+    009  IX.  Doenças do aparelho circulatório              I00-I99
+    010  X.   Doenças do aparelho respiratório              J00-J99
+    011  XI.  Doenças do aparelho digestivo                 K00-K93
+    012  XII. Doenças da pele e do tecido subcutâneo        L00-L99
+    013  XIII.Doenças sist osteomuscular e tec conjuntivo   M00-M99
+    014  XIV. Doenças do aparelho geniturinário             N00-N99
+    015  XV.  Gravidez parto e puerpério                    O00-O99
+    016  XVI. Algumas afec originadas no período perinatal  P00-P96
+    017  XVII.Malf cong deformid e anomalias cromossômicas  Q00-Q99
+    018  XVIII.Sint sinais e achad anorm ex clín e laborat  R00-R99
+    019  XIX. Lesões enven e alg out conseq causas externas S00-S99,T00-T98
+    020  XX.  Causas externas de morbidade e mortalidade    V01-V99,W00-W99,X00-X99,Y00-Y98
+    021  XXI. Contatos com serviços de saúde                Z00-Z99
+     22  XXII.Códigos para propósitos especiais             U04-U99,
+     23  U99  CID 10ª Revisão não disponível                U99,
+     24  Não preenchido                                        ,    */
+
+label define capcid 1 "Infectious and parasitic diseases" 2 "Neoplasms" 3 "Blood diseases" 4 "Endocrine/nutrit./metabolic diseases" ///
+5 "Mental disorders" 6 "Nervous system diseases" 7 "Eye/ear/skin/musculosk./genitourinary system" 9 "Circulatory system diseases" ///
+10 "Respiratory system diseases" 11 "Digestive system diseases" 15 "Pregnancy/childbirth/puerperium" 16 "Perinatal period conditions" ///
+17 "Congenital malformations" 19 "External causes" 21 "Other factors/contact with health services" 22 "special purposes (intolerances)" ///
+23 "Not well defined", modify
+
+/*versão das labels em português
+label define capcid 1 "doencas infecciosas e parasitárias" 2 "neoplasias (tumores)" 3 "doencas do sangue" 4 "doencas endocrinas/nutric./metabolicas" ///
+5 "transtornos mentais" 6 "doencas do sistema nervoso" 7 "doencas do olho(cid10)/ouvido(cid10)/pele/sist.osteomuscul./ap.geniturin." ///
+9 "doencas do aparelho circulatorio" 10 "doencas do aparelho respiratorio" 11 "doencas do aparelho digestivo" 15 "gravidez, parto e puerperio" ///
+16 "afeccoes no periodo perinatal" 17 "malformacoes congenitas" 19 "causas externas" 21 "outros fatores/contato servicos de saude" ///
+22 "codigos para propositos especiais(resist.a subst.)(cid-10)" 23 "mal defidas/revisao CID-10 nao disponivel(cid-10)" */
+/*codigos para propositos especiais: agente resistente a antibiotico */
+	
+foreach i in pri10 {
+gen capcid_`i' = 1 if substr(cid_`i',1,1)=="A"|substr(cid_`i',1,1)=="B"
+replace capcid_`i' = 2 if substr(cid_`i',1,1)=="C"|substr(cid_`i',1,1)=="D"&real(substr(cid_`i',2,2))<49
+replace capcid_`i' = 3 if substr(cid_`i',1,1)=="D"&real(substr(cid_`i',2,2))>49
+replace capcid_`i' = 4 if substr(cid_`i',1,1)=="E"
+replace capcid_`i' = 5 if substr(cid_`i',1,1)=="F"
+replace capcid_`i' = 6 if substr(cid_`i',1,1)=="G"
+replace capcid_`i' = 7 if substr(cid_`i',1,1)=="H"|substr(cid_`i',1,1)=="L"|substr(cid_`i',1,1)=="M"|substr(cid_`i',1,1)=="N"
+replace capcid_`i' = 9 if substr(cid_`i',1,1)=="I"
+replace capcid_`i' = 10 if substr(cid_`i',1,1)=="J"
+replace capcid_`i' = 11 if substr(cid_`i',1,1)=="K"
+replace capcid_`i' = 15 if substr(cid_`i',1,1)=="O"
+replace capcid_`i' = 16 if substr(cid_`i',1,1)=="P"
+replace capcid_`i' = 17 if substr(cid_`i',1,1)=="Q"
+replace capcid_`i' = 19 if substr(cid_`i',1,1)=="S"|substr(cid_`i',1,1)=="T"|substr(cid_`i',1,1)=="V"|substr(cid_`i',1,1)=="W"|substr(cid_`i',1,1)=="X"|substr(cid_`i',1,1)=="Y"
+replace capcid_`i' = 21 if substr(cid_`i',1,1)=="Z"
+replace capcid_`i' = 22 if substr(cid_`i',1,1)=="U"&real(substr(cid_`i',2,1))!=9
+replace capcid_`i' = 23 if substr(cid_`i',1,1)=="R"|substr(cid_`i',1,1)=="U"&real(substr(cid_`i',2,1))==9
+
+label values capcid_`i' capcid
+}
